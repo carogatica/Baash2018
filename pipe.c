@@ -38,8 +38,12 @@ int check(char* argv[], char* comando1[], char* comando2[]){
 int redireccion(char* argv[], char fileName[]){
 	int i=0;
 
-	for(i=0;argv[i]!=NULL;i++){
-		if(!strcmp(argv[i],"<")){
+	for(i=0;i<20;i++){
+		if(argv[i] == NULL){
+		fileName = NULL;
+		return 0;
+		}
+		else if(!strcmp(argv[i],"<")){
 			strcpy(fileName,argv[i+1]);
 			argv[i]=NULL;
 			argv[i+1]=NULL;
@@ -54,6 +58,30 @@ int redireccion(char* argv[], char fileName[]){
 		}
 	}
 	return 0;
+}
+
+void ejecutarPipe(char* comando1[], char* comando2[], char* path[]){
+	char ejecutable[256];
+	int fd[2];
+	pipe(fd);
+	if(fork()==0){
+		close(fd[0]);
+		dup2(fd[1],1);
+		close(fd[1]);
+		buscarPath(comando1[1],path,ejecutable);
+		execv(ejecutable,comando1);
+		perror(ejecutable);
+		exit(1);
+	}
+	else{
+		close(fd[1]);
+		dup2(fd[0],0);
+		close(fd[0]);
+		buscarPath(comando2[0],path,ejecutable);
+		execv(ejecutable,comando2);
+		perror(ejecutable);
+		exit(1);
+	}
 }
 
 void liberarPipe( char* comando1[], char* comando2[]){

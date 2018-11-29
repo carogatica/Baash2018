@@ -3,9 +3,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "teclado.h"
+#include "entrada.h"
 
-int teclado(char* argv[] ,char* cadena){
+int contParametros(char* argv[] ,char* cadena){
 	int contador=0;
 
 	argv[0] = strtok(cadena, " \n");

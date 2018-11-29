@@ -1,11 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include "teclado.c"
-#include "pipe.c"
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <dirent.h>
+#include <fcntl.h>
+#include "entrada.c"
 #include "segundoPlano.c"
 #include "busqueda.c"
+#include "salida.c"
+#include "pipe.c"
 
 int main(int argc, char *argv[])
 {
@@ -14,16 +19,20 @@ int main(int argc, char *argv[])
 	char* comando = (char*) malloc(sizeof(char)*1024);
 	char hostname [20];
 	gethostname(hostname,20);
-
 	char* user=getlogin();
 
 	int bg;
+	int flagPid;
 	char* path[25];
-	char* ejecutable[256];
+	getPath(path);
+	char ejecutable[256];
+
+	pid_t pid;
 
 
 	while(1){
 		int pipe=0;
+		int pipeok=0;
 		int redirec=0;
 		char fileName[100];
 
@@ -33,9 +42,9 @@ int main(int argc, char *argv[])
 		//fgets(comando,256,stdin);
 		comando=getEntrada(comando);
 
-		//printf("%s ", comando);
+//		printf("%s ", comando);
 
-		argc=teclado(argv,comando);
+		argc=contParametros(argv,comando);
 
 		if (!strcmp(comando,"\n")){
 			printf("\n");
@@ -64,8 +73,40 @@ int main(int argc, char *argv[])
 			argv[argc-1] = NULL;
 			argv--;
 		}
+	//	printf("antes de buscar, %s %s\n", argv[0],path);
+		buscarPath(argv[0], path, ejecutable);
+		if(ejecutable[0]=='X')
+			printf("Archivo no encontrado\n");
+		else{
+			pid=fork();
+			if(pid<0){
+				perror("Error al crear proceso Hijo");
+				exit(1);
+			}
+			else if(pid==0){
+				if(redirec==2)
+					salida(fileName);
+				else if(redirec==1)
+					freopen(fileName,"r",stdin);
+				else if(pipe==1){
+					ejecutarPipe(comando1,comando2,path);
+					pipeok=1;
+				}
+				if(!pipeok){
+				//	printf("%s ", comando);
+					execv(ejecutable,argv);
+					perror(ejecutable);
+					exit(1);
+				}
+			}
+			else 
+				flagPid=-1;
+			if(bg)
+				waitpid(pid,&flagPid,WNOHANG);
+			else
+				waitpid(pid,&flagPid,0);
+		}
 
-		buscarpath(argv, path, ejecutable);
 	}
 
 	liberarPipe(comando1,comando2);
