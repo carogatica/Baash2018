@@ -1,0 +1,7 @@
+baash.o: baash.c entrada.c entrada.h segundoPlano.c busqueda.c salida.c \
+ pipe.c pipe.h
+busqueda.o: busqueda.c
+entrada.o: entrada.c entrada.h
+pipe.o: pipe.c pipe.h
+salida.o: salida.c
+segundoPlano.o: segundoPlano.c

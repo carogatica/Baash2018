@@ -1,3 +1,5 @@
+#include "segundoPlano.h"
+
 int checkBG(char* argv[]){
 	int i=0;
 

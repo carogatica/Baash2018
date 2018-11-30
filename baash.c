@@ -6,11 +6,11 @@
 #include <string.h>
 #include <dirent.h>
 #include <fcntl.h>
-#include "entrada.c"
-#include "segundoPlano.c"
-#include "busqueda.c"
-#include "salida.c"
-#include "pipe.c"
+#include "entrada.h"
+#include "segundoPlano.h"
+#include "busqueda.h"
+#include "salida.h"
+#include "pipe.h"
 
 int main(int argc, char *argv[])
 {

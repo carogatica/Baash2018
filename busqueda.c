@@ -1,3 +1,5 @@
+#include "busqueda.h"
+
 void buscarPath(char* argv, char* path[], char* ejecutable){
 	//char copiaArgv[100];
 	//strcpy(copiaArgv,argv);
@@ -5,7 +7,7 @@ void buscarPath(char* argv, char* path[], char* ejecutable){
 	char buscado[100]="";
 	char* archivo;
 	int listo;
-	//path relativo
+	//path absoluto
 	if(argv[0]=='/' || (argv[0]=='.' && argv[1]=='.' && argv[2]=='/')){
 		int flag=0;
 		char* direc;
@@ -40,7 +42,7 @@ void buscarPath(char* argv, char* path[], char* ejecutable){
 		archivo=strtok(argv,"/");
 		archivo=strtok(NULL,"/");
 	}
-	//path absoluto
+	//path relativo
 	else{
 		int i;
 		char aux[100];

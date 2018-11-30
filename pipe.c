@@ -1,6 +1,5 @@
 #include "pipe.h"
-
-
+#include "busqueda.c"
 
 int check(char* argv[], char* comando1[], char* comando2[]){
 	int i1, i2, aux;

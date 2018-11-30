@@ -1,3 +1,5 @@
+#include "salida.h"
+
 void salida(char archivo[]){
 	int fid, flag, ok;
 	flag=O_WRONLY|O_CREAT|O_TRUNC;
